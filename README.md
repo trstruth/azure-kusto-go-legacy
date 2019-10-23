@@ -5,7 +5,7 @@ To install via the Python Package Index (PyPI), type:
 * `go get github.com/trstruth/azure-kusto-go`
 
 ### Minimum Requirements
-* go 1.12.9
+* go 1.13.3
 * See go.mod for dependencies
 
 ### Authentication methods:
@@ -16,6 +16,8 @@ To install via the Python Package Index (PyPI), type:
 package main
 
 import (
+    "fmt"
+
     kusto "github.com/trstruth/azure-kusto-go"
 )
 
@@ -25,22 +27,19 @@ func main() {
     secret := "xxxxx" // just an example, don't check secrets into source control
     tenantID := "microsoft.com"
 
-    conn := kusto.NewConnectionWithAADApplicationKeyAuth(
+    conn, _ := kusto.NewConnectionWithAADApplicationKeyAuth(
         clusterName,
         clientID,
         secret,
         tenantID,
     )
-    
+
     c := kusto.NewClient(conn)
-    
+
     query := "MyTable | take 10"
     database := "MyDatabase"
-    result, err := c.executeQuery(query, database)
-    if err != nil {
-        fmt.Errorf(err.Error())
-    }
-    
+    result, _ := c.ExecuteQuery(query, database)
+
     resultTable := result.Tables[0]
     fmt.Println(resultTable.Columns)
     fmt.Println(resultTable.Rows)
