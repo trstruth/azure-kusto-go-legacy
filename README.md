@@ -1,7 +1,6 @@
 # Microsoft Azure Kusto  (Azure Data Explorer) SDK  for Go
 
 ### Install
-To install via the Python Package Index (PyPI), type:
 * `go get github.com/trstruth/azure-kusto-go`
 
 ### Minimum Requirements
