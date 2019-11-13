@@ -1,7 +1,11 @@
 package kusto
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
+	"net/http"
+	"strings"
 	"testing"
 )
 
@@ -32,6 +36,16 @@ func TestGenerateNewQueryRequest(t *testing.T) {
 
 	if req.Method != "POST" {
 		t.Fatalf("request method was incorrect: want POST got %s", req.Method)
+	}
+
+	escapedQueryString := strings.ReplaceAll(query, `"`, `\"`)
+	expectedData := fmt.Sprintf(`{"csl": "%s", "db": "%s"}`, escapedQueryString, database)
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(req.Body)
+	actualData := buf.String()
+
+	if expectedData != actualData {
+		t.Fatalf("Request body data didn't match: want %s, got %s", expectedData, actualData)
 	}
 
 	expectedConnectionURL := fmt.Sprintf("%s/v1/rest/query", c.connection.url)
@@ -82,6 +96,14 @@ func TestGenerateNewIngestRequest(t *testing.T) {
 
 	if req.Method != "POST" {
 		t.Fatalf("request method was incorrect: want POST got %s", req.Method)
+	}
+
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(req.Body)
+	actualData := buf.String()
+
+	if data != actualData {
+		t.Fatalf("Request body data didn't match: want %s, got %s", data, actualData)
 	}
 
 	expectedConnectionURL := fmt.Sprintf("%s/v1/rest/ingest/%s/%s?streamFormat=Json&mappingName=%s", c.connection.url, database, table, mappingName)
