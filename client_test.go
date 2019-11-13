@@ -26,7 +26,7 @@ func TestGenerateNewQueryRequest(t *testing.T) {
 
 	c := NewClient(conn)
 	req, err := c.generateNewQueryRequest(query, database)
-	if  err != nil {
+	if err != nil {
 		t.Fatalf(err.Error())
 	}
 
@@ -74,10 +74,9 @@ func TestGenerateNewIngestRequest(t *testing.T) {
 	table := "TestTable"
 	mappingName := "Mapping1"
 
-
 	c := NewClient(conn)
 	req, err := c.generateNewIngestRequest(data, database, table, mappingName)
-	if  err != nil {
+	if err != nil {
 		t.Fatalf(err.Error())
 	}
 
