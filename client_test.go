@@ -2,9 +2,10 @@ package kusto
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -65,8 +66,8 @@ func TestGenerateNewQueryRequest(t *testing.T) {
 
 	for headerKey, expectedHeaderVal := range expectedHeaders {
 		actualHeaderVal := req.Header[headerKey]
-		if !stringSlicesAreEqual(actualHeaderVal, expectedHeaderVal) {
-			t.Fatalf("the key %s in the generated request was incorrect: want %s, got %s", headerKey, expectedHeaderVal, actualHeaderVal)
+		if !reflect.DeepEqual(actualHeaderVal, expectedHeaderVal) {
+			t.Errorf("the key %s in the generated request was incorrect: want %s, got %s", headerKey, expectedHeaderVal, actualHeaderVal)
 		}
 	}
 }
