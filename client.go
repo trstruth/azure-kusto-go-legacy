@@ -16,34 +16,34 @@ import (
 // to make http requests to Kusto itself
 type Client struct {
 	connection *Connection
-	httpClient httpClient
+	httpClient *http.Client
 }
 
-// httpClient is an interface that only contains the Do method signature,
-// so that we can inject our own mock http client for testing
-type httpClient interface {
-	Do(*http.Request) (*http.Response, error)
+// Option is a function that modifies an instance of Client.  Pairing this with
+// variadic argument syntax in the initializer allows us to configure a new
+// instance of Client
+type Option func(*Client)
+
+// SetHTTPClient is an option that allows us to configure the http client member
+// of a Client instance
+func SetHTTPClient(httpClient *http.Client) Option {
+	return func(c *Client) {
+		c.httpClient = httpClient
+	}
 }
 
 // NewClient constructs a Client struct with a "real" http client in its
 // httpClient field.  This function should be called by external users of
 // the kusto package
-func NewClient(conn *Connection) *Client {
+func NewClient(conn *Connection, options ...Option) *Client {
 	c := Client{}
 
 	c.connection = conn
 	c.httpClient = &http.Client{}
 
-	return &c
-}
-
-// newTestClient is called by tests in order to construct a client with a
-// mock httpClient field.
-func newTestClient(conn *Connection, httpClient *http.Client) *Client {
-	c := Client{}
-
-	c.connection = conn
-	c.httpClient = httpClient
+	for _, optionFunc := range options {
+		optionFunc(&c)
+	}
 
 	return &c
 }
