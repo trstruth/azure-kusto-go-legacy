@@ -103,10 +103,8 @@ func (c *Client) generateNewQueryRequest(query, database string) (*http.Request,
 	// required headers
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.connection.servicePrincipalToken.Token().AccessToken))
-	req.Header.Set("Host", c.connection.url.Hostname())
-
-	// optional headers
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	req.Header.Set("Host", c.connection.url.Hostname())
 
 	return req, nil
 }
