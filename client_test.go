@@ -22,7 +22,7 @@ func TestGenerateNewQueryRequest(t *testing.T) {
 		tenantID,
 	)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Errorf(err.Error())
 	}
 
 	query := "TestTable | take 10"
@@ -31,11 +31,11 @@ func TestGenerateNewQueryRequest(t *testing.T) {
 	c := NewClient(conn)
 	req, err := c.generateNewQueryRequest(query, database)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Errorf(err.Error())
 	}
 
 	if req.Method != "POST" {
-		t.Fatalf("request method was incorrect: want POST got %s", req.Method)
+		t.Errorf("request method was incorrect: want POST got %s", req.Method)
 	}
 
 	escapedQueryString := strings.ReplaceAll(query, `"`, `\"`)
@@ -45,12 +45,12 @@ func TestGenerateNewQueryRequest(t *testing.T) {
 	actualData := buf.String()
 
 	if expectedData != actualData {
-		t.Fatalf("Request body data didn't match: want %s, got %s", expectedData, actualData)
+		t.Errorf("Request body data didn't match: want %s, got %s", expectedData, actualData)
 	}
 
 	expectedConnectionURL := fmt.Sprintf("%s/v1/rest/query", c.connection.url)
 	if req.URL.String() != expectedConnectionURL {
-		t.Fatalf("request URL was incorrect: want %s, got %s", expectedConnectionURL, req.URL.String())
+		t.Errorf("request URL was incorrect: want %s, got %s", expectedConnectionURL, req.URL.String())
 	}
 
 	expectedHeaders := make(map[string][]string)
@@ -80,7 +80,7 @@ func TestGenerateNewIngestRequest(t *testing.T) {
 		tenantID,
 	)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Errorf(err.Error())
 	}
 
 	data := `{"Col": "Tristan","Col2": "Test","Col3": 123,"Col4": "2019-10-14 03:10:07.1932960"}`
@@ -91,11 +91,11 @@ func TestGenerateNewIngestRequest(t *testing.T) {
 	c := NewClient(conn)
 	req, err := c.generateNewIngestRequest(data, database, table, mappingName)
 	if err != nil {
-		t.Fatalf(err.Error())
+		t.Errorf(err.Error())
 	}
 
 	if req.Method != "POST" {
-		t.Fatalf("request method was incorrect: want POST got %s", req.Method)
+		t.Errorf("request method was incorrect: want POST got %s", req.Method)
 	}
 
 	buf := new(bytes.Buffer)
@@ -103,12 +103,12 @@ func TestGenerateNewIngestRequest(t *testing.T) {
 	actualData := buf.String()
 
 	if data != actualData {
-		t.Fatalf("Request body data didn't match: want %s, got %s", data, actualData)
+		t.Errorf("Request body data didn't match: want %s, got %s", data, actualData)
 	}
 
 	expectedConnectionURL := fmt.Sprintf("%s/v1/rest/ingest/%s/%s?streamFormat=Json&mappingName=%s", c.connection.url, database, table, mappingName)
 	if req.URL.String() != expectedConnectionURL {
-		t.Fatalf("request URL was incorrect: want %s, got %s", expectedConnectionURL, req.URL.String())
+		t.Errorf("request URL was incorrect: want %s, got %s", expectedConnectionURL, req.URL.String())
 	}
 
 	expectedHeaders := make(map[string][]string)
