@@ -110,7 +110,7 @@ func (c *Client) generateNewQueryRequest(query, database string) (*http.Request,
 }
 
 // IngestData performs streaming ingest of `data` into `database`
-func (c *Client) IngestData(data, database, table, mappingName string) (*QueryResult, error) {
+func (c *Client) IngestData(data, database, table, mappingName string) (*IngestResult, error) {
 	err := c.connection.servicePrincipalToken.EnsureFresh()
 	if err != nil {
 		return nil, err
@@ -136,13 +136,13 @@ func (c *Client) IngestData(data, database, table, mappingName string) (*QueryRe
 		return nil, err
 	}
 
-	queryResult := QueryResult{}
-	err = json.Unmarshal(bodyBytes, &queryResult)
+	IngestResult := IngestResult{}
+	err = json.Unmarshal(bodyBytes, &IngestResult)
 	if err != nil {
 		return nil, err
 	}
 
-	return &queryResult, nil
+	return &IngestResult, nil
 }
 
 // generateNewIngestRequest is a helper used by IngestData to generate a request to
