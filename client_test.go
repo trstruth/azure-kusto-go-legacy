@@ -9,12 +9,19 @@ import (
 	"testing"
 )
 
-func TestGenerateNewQueryRequest(t *testing.T) {
-	clusterName := "testCluster"
-	clientID := "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-	secret := "xxxxx"
-	tenantID := "microsoft.com"
+const (
+	clusterName = "testCluster"
+	clientID = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+	secret = "xxxxx"
+	tenantID = "microsoft.com"
+	query = "TestTable | take 10"
+	database = "testDB"
+	data = `{"Col": "Test","Col2": "Test2","Col3": 123,"Col4": "2019-10-14 03:10:07.1932960"}`
+	table = "TestTable"
+	mappingName = "Mapping1"
+)
 
+func TestGenerateNewQueryRequest(t *testing.T) {
 	conn, err := NewConnectionWithAADApplicationKeyAuth(
 		clusterName,
 		clientID,
@@ -24,9 +31,6 @@ func TestGenerateNewQueryRequest(t *testing.T) {
 	if err != nil {
 		t.Errorf(err.Error())
 	}
-
-	query := "TestTable | take 10"
-	database := "testDB"
 
 	c := NewClient(conn)
 	req, err := c.generateNewQueryRequest(query, database)
@@ -68,11 +72,6 @@ func TestGenerateNewQueryRequest(t *testing.T) {
 }
 
 func TestGenerateNewIngestRequest(t *testing.T) {
-	clusterName := "testCluster"
-	clientID := "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-	secret := "xxxxx"
-	tenantID := "microsoft.com"
-
 	conn, err := NewConnectionWithAADApplicationKeyAuth(
 		clusterName,
 		clientID,
@@ -82,11 +81,6 @@ func TestGenerateNewIngestRequest(t *testing.T) {
 	if err != nil {
 		t.Errorf(err.Error())
 	}
-
-	data := `{"Col": "Tristan","Col2": "Test","Col3": 123,"Col4": "2019-10-14 03:10:07.1932960"}`
-	database := "TestDB"
-	table := "TestTable"
-	mappingName := "Mapping1"
 
 	c := NewClient(conn)
 	req, err := c.generateNewIngestRequest(data, database, table, mappingName)
