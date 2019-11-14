@@ -20,10 +20,15 @@ type Table struct {
 type Column struct {
 	ColumnName string
 	DataType   string
-	ColumnType string
 }
 
 // Row is a slice of empty interfaces, where a given index in that
 // slice corresponds to the value at the same index in the Columns
 // slice in Table
 type Row []interface{}
+
+// IngestResult is the model which contains the fields present in
+// the response of an http request to the /v1/rest/ingest endpoint
+type IngestResult struct {
+	Tables []Table
+}
