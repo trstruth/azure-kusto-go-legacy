@@ -1,0 +1,43 @@
+{
+    "Tables": [
+        {
+            "TableName": "Table_0",
+            "Columns": [
+                {
+                    "ColumnName": "Col",
+                    "DataType": "String",
+                    "ColumnType": "string"
+                },
+                {
+                    "ColumnName": "Col2",
+                    "DataType": "String",
+                    "ColumnType": "string"
+                },
+                {
+                    "ColumnName": "Col3",
+                    "DataType": "Int32",
+                    "ColumnType": "int"
+                },
+                {
+                    "ColumnName": "Col4",
+                    "DataType": "DateTime",
+                    "ColumnType": "datetime"
+                }
+            ],
+            "Rows": [
+                [
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                [
+                    "test",
+                    "2k",
+                    123,
+                    "2019-10-14T03:10:07.193296Z"
+                ]
+            ]
+        }
+    ]
+}

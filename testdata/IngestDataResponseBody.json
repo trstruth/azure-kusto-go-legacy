@@ -1,0 +1,33 @@
+{
+    "Tables": [
+        {
+            "TableName": "Table_0",
+            "Columns": [
+                {
+                    "ColumnName": "ConsumedRecordsCount",
+                    "DataType": "Int64"
+                },
+                {
+                    "ColumnName": "UpdatePolicyStatus",
+                    "DataType": "String"
+                },
+                {
+                    "ColumnName": "UpdatePolicyFailureCode",
+                    "DataType": "String"
+                },
+                {
+                    "ColumnName": "UpdatePolicyFailureReason",
+                    "DataType": "String"
+                }
+            ],
+            "Rows": [
+                [
+                    0,
+                    "Inactive",
+                    "Unknown",
+                    null
+                ]
+            ]
+        }
+    ]
+}
