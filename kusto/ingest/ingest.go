@@ -35,6 +35,8 @@ type Ingestion struct {
 	connMu     sync.Mutex
 	streamConn streamIngestor
 
+	ingestionFormat string
+
 	bufferSize int
 	maxBuffers int
 }
@@ -47,6 +49,27 @@ func WithStaticBuffer(bufferSize int, maxBuffers int) Option {
 	return func(s *Ingestion) {
 		s.bufferSize = bufferSize
 		s.maxBuffers = maxBuffers
+	}
+}
+
+func WithIngestionFormat(format string) Option {
+	return func(s *Ingestion) {
+		s.ingestionFormat = format
+	}
+}
+
+func stringToIngestionMappingType(s string) (DataFormat, error) {
+	switch s {
+	case "csv":
+		return CSV, nil
+	case "json":
+		return JSON, nil
+	case "parquet":
+		return Parquet, nil
+	case "orc":
+		return ORC, nil
+	default:
+		return DFUnknown, fmt.Errorf("unknown ingestion mapping type: %s", s)
 	}
 }
 
@@ -93,6 +116,13 @@ func (i *Ingestion) prepForIngestion(ctx context.Context, options []FileOption, 
 			return nil, properties.All{}, err
 		}
 	}
+
+	ingestionFormat, err := stringToIngestionMappingType(i.ingestionFormat)
+	if err != nil {
+		return nil, properties.All{}, err
+	}
+	props.Ingestion.Additional.Format = ingestionFormat
+	props.Ingestion.Additional.IngestionMappingType = ingestionFormat
 
 	if source == FromReader && props.Ingestion.Additional.Format == DFUnknown {
 		props.Ingestion.Additional.Format = CSV
