@@ -37,6 +37,8 @@ type Ingestion struct {
 
 	bufferSize int
 	maxBuffers int
+
+	ingestionFormat DataFormat
 }
 
 // Option is an optional argument to New().
@@ -47,6 +49,13 @@ func WithStaticBuffer(bufferSize int, maxBuffers int) Option {
 	return func(s *Ingestion) {
 		s.bufferSize = bufferSize
 		s.maxBuffers = maxBuffers
+	}
+}
+
+// WithDataFormat sets the data format which will be used for all ingestion requests sent to the ingestion client.
+func WithDataFormat(format DataFormat) Option {
+	return func(s *Ingestion) {
+		s.ingestionFormat = format
 	}
 }
 
@@ -94,6 +103,9 @@ func (i *Ingestion) prepForIngestion(ctx context.Context, options []FileOption, 
 		}
 	}
 
+	props.Ingestion.Additional.Format = i.ingestionFormat
+	props.Ingestion.Additional.IngestionMappingType = i.ingestionFormat
+
 	if source == FromReader && props.Ingestion.Additional.Format == DFUnknown {
 		props.Ingestion.Additional.Format = CSV
 	}
@@ -119,7 +131,7 @@ func (i *Ingestion) prepForIngestion(ctx context.Context, options []FileOption, 
 			}
 
 			if len(managerResources.Tables) == 0 {
-				return nil, properties.All{}, fmt.Errorf("User requested reporting status to table, yet status table resource URI is not found")
+				return nil, properties.All{}, fmt.Errorf("user requested reporting status to table, yet status table resource URI is not found")
 			}
 
 			props.Ingestion.TableEntryRef.TableConnectionString = managerResources.Tables[0].URL().String()
